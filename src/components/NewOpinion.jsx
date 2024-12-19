@@ -1,26 +1,29 @@
-import { useActionState } from "react";
-
-function shareOpinionAction(prevFormState, formData) {
-  const { title, body, userName } = Object.fromEntries(formData.entries());
-  const errors = [];
-
-  if (!userName.trim()) {
-    errors.push("Please add a username.");
-  }
-
-  if (!body.trim()) {
-    errors.push("Please enter a body to your post!");
-  }
-
-  if (errors.length > 0) {
-    return { errors, enteredValues: { title, userName, body } };
-  }
-
-  // Submit to backend
-  return { errors: null };
-}
+import { use, useActionState } from "react";
+import { OpinionsContext } from "../store/opinions-context";
 
 export function NewOpinion() {
+  const { addOpinion } = use(OpinionsContext);
+
+  function shareOpinionAction(prevFormState, formData) {
+    const { title, body, userName } = Object.fromEntries(formData.entries());
+    const errors = [];
+
+    if (!userName.trim()) {
+      errors.push("Please add a username.");
+    }
+
+    if (!body.trim()) {
+      errors.push("Please enter a body to your post!");
+    }
+
+    if (errors.length > 0) {
+      return { errors, enteredValues: { title, userName, body } };
+    }
+
+    addOpinion({ title, body, userName });
+    return { errors: null };
+  }
+
   const [formState, formAction, pending] = useActionState(
     shareOpinionAction,
     []
