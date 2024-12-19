@@ -3,7 +3,6 @@ import { useActionState } from "react";
 function shareOpinionAction(prevFormState, formData) {
   const { title, body, userName } = Object.fromEntries(formData.entries());
   const errors = [];
-  // Clear form if submitted with valid values
 
   if (!userName.trim()) {
     errors.push("Please add a username.");
@@ -62,14 +61,15 @@ export function NewOpinion() {
           ></textarea>
         </p>
 
+        {formState.errors &&
+          formState.errors.map((error) => (
+            <ul className="errors">
+              <li key={error}>{error}</li>
+            </ul>
+          ))}
+
         <p className="actions">
           <button type="submit">Submit</button>
-        </p>
-
-        <p>
-          {formState.errors?.map((e) => (
-            <p>{e}</p>
-          ))}
         </p>
       </form>
     </div>
